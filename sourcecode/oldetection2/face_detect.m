@@ -1,0 +1,59 @@
+clear all
+close all
+clc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ??????????????
+x=imread('2.jpg'); %????????
+figure
+imshow(x)
+
+if size(x,3)>1
+    x=rgb2gray(x);%????????????
+end
+x=double(x);      %????????????
+[output,count,m,svec]=facefind(x);%???????? 
+imagesc(x) 
+colormap(gray) 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ????????????
+col=[1 0 0];%??????????????
+col=[0 1 0];%??????????????
+t=2;        %????????????????
+N=size(output,2);
+if (N>0)
+    for i=1:N
+        x1=output(1,i);
+        x2=output(2,i);
+        y1=output(3,i);
+        y2=output(4,i);
+        vec=[x1 x2 y1 y2];     %????????????????
+        ind=find(isinf(vec));  %??????????
+        a=200;                 %should be realmax
+        vec(ind)=sign(vec(ind))*a;
+
+        h1=line([vec(1) vec(2)],[vec(3) vec(3)]);
+        h2=line([vec(2) vec(2)],[vec(3) vec(4)]);
+        h3=line([vec(1) vec(2)],[vec(4) vec(4)]);
+        h4=line([vec(1) vec(1)],[vec(3) vec(4)]);
+
+        h=[h1 h2 h3 h4];
+        set(h,'Color',col);
+        set(h,'LineWidth',t)
+    end
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+minf=m(1);
+maxf=m(2);
+
+ex1=size(x,1)*0.01;
+ex1e=size(x,1)*0.02;
+ex2=size(x,1)*0.04;
+ex2e=size(x,1)*0.05;
+bx1=[0 maxf maxf 0];
+by1=[ex1e ex1e ex1 ex1];
+bx2=[0 minf minf 0];
+by2=[ex2e ex2e ex2 ex2];
+
+hold on
+fill(bx1,by1,[0 1 0])
+fill(bx2,by2,[0 1 0])
+hold off
